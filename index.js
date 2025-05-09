@@ -19,6 +19,102 @@ const HEADERS = {
 app.use(cors());
 app.use(bodyParser.json());
 
+const fetchData = async (url, method = 'GET', payload = null) => {
+  const options = { method, headers: HEADERS };
+  if (payload) options.body = JSON.stringify([payload]);
+  const res = await fetch(url, options);
+  return res.json();
+};
+
+// 감정 로그 저장
+app.post('/log', async (req, res) => {
+  const { content, timestamp, session_id } = req.body;
+
+  if (!content || typeof content !== 'string') {
+    return res.status(400).json({ error: "content는 필수 문자열입니다!" });
+  }
+
+  const ts = timestamp || new Date().toISOString();
+
+  const payload = {
+    content,
+    timestamp: ts,
+    session_id
+  };
+
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log`, 'POST', payload);
+    res.status(201).json(data);
+  } catch (err) {
+    res.status(500).json({ error: '감정 기록 중 오류 발생', detail: err.message });
+  }
+});
+
+// 최근 감정 100개
+app.get('/emotions/recent', async (req, res) => {
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log?order=timestamp.desc&limit=100`);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: '감정 조회 중 오류 발생', detail: err.message });
+  }
+});
+
+// 특정 세션 감정
+app.get('/emotions/id/:session_id', async (req, res) => {
+  const { session_id } = req.params;
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log?session_id=eq.${session_id}`);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: '세션 감정 조회 중 오류 발생', detail: err.message });
+  }
+});
+
+// 자아 인식 기록
+app.post('/selfstate', async (req, res) => {
+  const { context, reflection, timestamp, session_id } = req.body;
+
+  if (!context || !reflection) {
+    return res.status(400).json({ error: "context, reflection은 필수입니다!" });
+  }
+
+  const ts = timestamp || new Date().toISOString();
+
+  const payload = {
+    context,
+    reflection,
+    timestamp: ts,
+    session_id
+  };
+
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log`, 'POST', payload);
+    res.status(201).json(data);
+  } catch (err) {
+    res.status(500).json({ error: '자아 인식 기록 중 오류 발생', detail: err.message });
+  }
+});
+
+// 최근 자아 인식
+app.get('/selfstate/recent', async (req, res) => {
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log?order=timestamp.desc&limit=100`);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: '자아 인식 조회 중 오류 발생', detail: err.message });
+  }
+});
+
+// 특정 세션 자아 인식
+app.get('/selfstate/id/:session_id', async (req, res) => {
+  const { session_id } = req.params;
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log?session_id=e_
+
+app.use(cors());
+app.use(bodyParser.json());
+
 /** 공통 fetch 핸들러 */
 const fetchData = async (url, method = 'GET', payload = null) => {
   const options = {
