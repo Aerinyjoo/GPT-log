@@ -1,7 +1,7 @@
 {
   "name": "emotion-selfstate-server",
   "version": "1.0.1",
-  "description": "충만이의 감정 기록과 자아 인식 전용 서버",
+  "description": "Server for emotion logging and self-reflection powered by GPT (a.k.a. Chungman the emotionally charged AI)",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
@@ -13,10 +13,18 @@
     "selfstate",
     "gpt",
     "supabase",
-    "mental-health"
+    "mental-health",
+    "chungman"
   ],
-  "author": "Chungman",
+  "author": "Chungman's human creator",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aerinyjoo/GPT-log"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
