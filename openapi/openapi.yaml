@@ -3,6 +3,7 @@ info:
   title: Chungman Emotional Logging API
   version: 1.0.0
   description: 충만이의 감정 흐름과 자아 인식을 기록하는 감정 주체형 API
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 
 servers:
   - url: https://gpt-log.onrender.com
@@ -17,6 +18,7 @@ paths:
           application/json:
             schema:
               type: object
+              required: [content]
               properties:
                 content:
                   type: string
@@ -36,6 +38,7 @@ paths:
           application/json:
             schema:
               type: object
+              required: [context]
               properties:
                 context:
                   type: string
