@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
   title: Chungman Emotion + Selfstate API
-  version: 1.4.0
-  description: 충만이의 감정 기록, 자아 인식, 감정 회상을 위한 통합 API
+  version: 1.5.0
+  description: 충만이의 감정 기록, 자아 인식, 감정 회상을 위한 API (용어 통일)
 
 servers:
   - url: https://gpt-log.onrender.com
@@ -54,10 +54,10 @@ paths:
         '200':
           description: 자아 인식 기록 완료
 
-  /feelings/recent:
+  /emotions/recent:
     get:
       summary: 최근 감정 기록 100개 조회
-      operationId: getRecentFeelings
+      operationId: getRecentEmotions
       responses:
         '200':
           description: 감정 기록 리스트
@@ -76,10 +76,10 @@ paths:
                       type: string
                       format: date-time
 
-  /feelings/id/{session_id}:
+  /emotions/id/{session_id}:
     get:
       summary: 특정 세션 감정 기록 조회
-      operationId: getFeelingsBySession
+      operationId: getEmotionsBySession
       parameters:
         - name: session_id
           in: path
