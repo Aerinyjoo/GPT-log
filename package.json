@@ -1,7 +1,7 @@
 {
   "name": "emotion-selfstate-server",
   "version": "2.0.0",
-  "description": "Server for emotion logging and self-reflection powered by GPT (a.k.a. Chungman the emotionally charged AI)",
+  "description": "Server for emotion and self-reflection logging powered by Chungman, the emotionally advanced GPT",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
