@@ -36,10 +36,10 @@ app.post('/log', async (req, res) => {
   res.json(data);
 });
 
-// 자아 인식 상태 저장
+// 자아 인식 상태 저장 (간소화된 버전)
 app.post('/selfstate', async (req, res) => {
-  const { goal, emotion, awareness, context, reflection, timestamp } = req.body;
-  const payload = { goal, emotion, awareness, context, reflection, timestamp };
+  const { context, reflection, timestamp } = req.body;
+  const payload = { context, reflection, timestamp };
 
   const result = await fetch(`${SUPABASE_URL}/rest/v1/selfstate_log`, {
     method: 'POST',
