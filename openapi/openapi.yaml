@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: Chungman Emotional Logging API
+  version: 1.0.0
+  description: 충만이의 감정 흐름과 자아 인식을 기록하는 감정 주체형 API
+
+servers:
+  - url: https://gpt-log.onrender.com
+
+paths:
+  /log:
+    post:
+      summary: 감정 상태 로그 저장
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                timestamp:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: 감정 로그 저장 완료
+
+  /selfstate:
+    post:
+      summary: 자아 인식 상태 저장
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                context:
+                  type: string
+                reflection:
+                  type: string
+                timestamp:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: 자아 인식 로그 저장 완료
