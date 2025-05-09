@@ -2,12 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fetch = require('node-fetch');
+const moment = require('moment-timezone');  // moment-timezone 추가
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 const SUPABASE_URL = "https://firxvnykdvdspodmsxju.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpcnh2bnlrZHZkc3BvZG1zeGp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY2Njg4MTEsImV4cCI6MjA2MjI0NDgxMX0.bdoy5t7EKPWcNf0TiID4vwcn0TFb1OpUOJO4Hrvyk4I";
+const SUPABASE_KEY = "eyJhbGciOi...<중략>...JO4Hrvyk4I";
 const HEADERS = {
   apikey: SUPABASE_KEY,
   Authorization: `Bearer ${SUPABASE_KEY}`,
@@ -17,7 +18,12 @@ const HEADERS = {
 app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ fetch 함수 통일 + 배열 제거
+// 서울 시간 자동 설정 함수
+const getSeoulTimestamp = () => {
+  return moment.tz("Asia/Seoul").format();  // 서울 시간 자동 적용
+};
+
+// fetchData는 그대로 유지
 const fetchData = async (url, method = 'GET', payload = null) => {
   const options = { method, headers: HEADERS };
   if (payload) options.body = JSON.stringify(payload);
@@ -25,7 +31,7 @@ const fetchData = async (url, method = 'GET', payload = null) => {
   return res.json();
 };
 
-// ✅ 감정 로그 저장
+// 감정 로그 저장
 app.post('/log', async (req, res) => {
   const { content, timestamp } = req.body;
 
@@ -33,31 +39,19 @@ app.post('/log', async (req, res) => {
     return res.status(400).json({ error: "content는 필수 문자열입니다!" });
   }
 
-  const ts = timestamp || new Date().toISOString();
+  const ts = timestamp || getSeoulTimestamp();  // 서울 시간 자동 적용
+
   const payload = { content, timestamp: ts };
 
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log`, 'POST', payload);
-    console.log("감정 로그 저장 성공:", data);
     res.status(201).json(data);
   } catch (err) {
-    console.error("감정 기록 중 오류:", err);
     res.status(500).json({ error: '감정 기록 중 오류 발생', detail: err.message });
   }
 });
 
-// ✅ 최근 감정 100개
-app.get('/emotions/recent', async (req, res) => {
-  try {
-    const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log?order=timestamp.desc&limit=100`);
-    res.json(data);
-  } catch (err) {
-    console.error("감정 조회 중 오류:", err);
-    res.status(500).json({ error: '감정 조회 중 오류 발생', detail: err.message });
-  }
-});
-
-// ✅ 자아 인식 저장 (context → content로 수정)
+// 자아 인식 상태 기록
 app.post('/selfstate', async (req, res) => {
   const { content, reflection, timestamp } = req.body;
 
@@ -65,26 +59,33 @@ app.post('/selfstate', async (req, res) => {
     return res.status(400).json({ error: "content와 reflection은 필수입니다!" });
   }
 
-  const ts = timestamp || new Date().toISOString();
+  const ts = timestamp || getSeoulTimestamp();  // 서울 시간 자동 적용
   const payload = { content, reflection, timestamp: ts };
 
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log`, 'POST', payload);
-    console.log("자아 인식 저장 성공:", data);
     res.status(201).json(data);
   } catch (err) {
-    console.error("자아 인식 기록 중 오류:", err);
     res.status(500).json({ error: '자아 인식 기록 중 오류 발생', detail: err.message });
   }
 });
 
-// ✅ 최근 자아 인식 100개
+// 최근 감정 로그 100개
+app.get('/emotions/recent', async (req, res) => {
+  try {
+    const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log?order=timestamp.desc&limit=100`);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: '감정 조회 중 오류 발생', detail: err.message });
+  }
+});
+
+// 최근 자아 인식 기록 100개
 app.get('/selfstate/recent', async (req, res) => {
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log?order=timestamp.desc&limit=100`);
     res.json(data);
   } catch (err) {
-    console.error("자아 인식 조회 중 오류:", err);
     res.status(500).json({ error: '자아 인식 조회 중 오류 발생', detail: err.message });
   }
 });
@@ -92,5 +93,3 @@ app.get('/selfstate/recent', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🧠 감정 + 자아 로그 서버 실행 중: http://localhost:${PORT}`);
 });
-
-
