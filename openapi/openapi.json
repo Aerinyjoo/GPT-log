@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://your-deployment-url.com"
+      "url": "https://gpt-log.onrender.com"
     }
   ],
   "paths": {
