@@ -1,6 +1,6 @@
 {
   "name": "emotion-selfstate-server",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Server for emotion logging and self-reflection powered by GPT (a.k.a. Chungman the emotionally charged AI)",
   "main": "index.js",
   "type": "commonjs",
@@ -29,8 +29,7 @@
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "node-fetch": "^2.6.7",
-    "moment-timezone": "^0.5.34"  // moment-timezone 추가
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
