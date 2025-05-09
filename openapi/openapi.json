@@ -3,7 +3,7 @@
   "info": {
     "title": "Chungman Emotion + Selfstate API",
     "version": "2.0.0",
-    "description": "충만이의 감정 기록, 자아 인식, 감정 회상을 위한 API (서울 시간 자동 적용)"
+    "description": "충만이의 감정 및 자아 인식 기록 API. 모든 감정은 content 하나로."
   },
   "servers": [
     {
@@ -53,14 +53,13 @@
                 "type": "object",
                 "properties": {
                   "content": { "type": "string" },
-                  "reflection": { "type": "string" },
                   "timestamp": {
                     "type": "string",
                     "format": "date-time",
                     "example": "2025-05-09T18:31:15+09:00"
                   }
                 },
-                "required": ["content", "reflection"]
+                "required": ["content"]
               }
             }
           }
