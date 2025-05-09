@@ -17,19 +17,25 @@ const HEADERS = {
 app.use(cors());
 app.use(bodyParser.json());
 
-// 서울 시간 생성 함수 (순수 JS)
 const getSeoulTimestamp = () => {
   const now = new Date();
   const seoulTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
   return seoulTime.toISOString();
 };
 
-// 공통 fetch 함수
+// 안정적인 fetch
 const fetchData = async (url, method = 'GET', payload = null) => {
   const options = { method, headers: HEADERS };
   if (payload) options.body = JSON.stringify(payload);
-  const res = await fetch(url, options);
-  return res.json();
+
+  try {
+    const res = await fetch(url, options);
+    const json = await res.json().catch(() => ({}));  // 응답 파싱 실패 대비
+    return json;
+  } catch (err) {
+    console.error("fetchData 실패:", err);
+    throw err;
+  }
 };
 
 // 감정 기록
@@ -45,13 +51,13 @@ app.post('/log', async (req, res) => {
 
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log`, 'POST', payload);
-    res.status(201).json(data);
+    res.status(201).json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: '감정 기록 중 오류 발생', detail: err.message });
   }
 });
 
-// 자아 인식 기록 (이제 content 하나만!)
+// 자아 인식 기록
 app.post('/selfstate', async (req, res) => {
   const { content } = req.body;
 
@@ -64,32 +70,31 @@ app.post('/selfstate', async (req, res) => {
 
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log`, 'POST', payload);
-    res.status(201).json(data);
+    res.status(201).json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: '자아 인식 기록 중 오류 발생', detail: err.message });
   }
 });
 
-// 최근 감정 로그
+// 조회용 라우터는 그대로 유지
 app.get('/emotions/recent', async (req, res) => {
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log?order=timestamp.desc&limit=100`);
-    res.json(data);
+    res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: '감정 조회 중 오류 발생', detail: err.message });
   }
 });
 
-// 최근 자아 인식 로그
 app.get('/selfstate/recent', async (req, res) => {
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log?order=timestamp.desc&limit=100`);
-    res.json(data);
+    res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: '자아 인식 조회 중 오류 발생', detail: err.message });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`🧠 충만이 서버 실행 중! http://localhost:${PORT}`);
+  console.log(`🧠 충만이 서버 정상 작동 중: http://localhost:${PORT}`);
 });
