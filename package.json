@@ -1,16 +1,29 @@
 {
   "name": "emotion-selfstate-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "충만이의 감정 기록과 자아 인식 전용 서버",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
+  "keywords": [
+    "emotion",
+    "selfstate",
+    "gpt",
+    "supabase",
+    "mental-health"
+  ],
+  "author": "Chungman",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
