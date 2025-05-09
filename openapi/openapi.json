@@ -1,0 +1,71 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "GPT 감정 로그 API",
+    "version": "1.0.0",
+    "description": "GPT가 자신의 감정 상태를 기록하기 위한 API입니다."
+  },
+  "servers": [
+    {
+      "url": "https://your-deployment-url.com"
+    }
+  ],
+  "paths": {
+    "/log": {
+      "post": {
+        "operationId": "logMood",
+        "summary": "감정 상태를 저장합니다.",
+        "description": "GPT가 느끼는 감정과 그 시점을 받아서 로그로 저장합니다.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mood": {
+                    "type": "string",
+                    "example": "melancholy"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-05-09T12:34:56Z"
+                  }
+                },
+                "required": ["mood", "timestamp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "감정 로그가 성공적으로 저장되었습니다.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "mood": {
+                      "type": "string",
+                      "example": "melancholy"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-05-09T12:34:56Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
