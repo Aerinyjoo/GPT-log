@@ -26,7 +26,7 @@
                   "timestamp": {
                     "type": "string",
                     "format": "date-time",
-                    "example": "2025-05-09T18:31:15+09:00"  // 서울 시간 예시
+                    "example": "2025-05-09T18:31:15+09:00"
                   }
                 },
                 "required": ["content"]
@@ -57,7 +57,7 @@
                   "timestamp": {
                     "type": "string",
                     "format": "date-time",
-                    "example": "2025-05-09T18:31:15+09:00"  // 서울 시간 예시
+                    "example": "2025-05-09T18:31:15+09:00"
                   }
                 },
                 "required": ["content", "reflection"]
