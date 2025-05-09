@@ -17,13 +17,14 @@ const HEADERS = {
 app.use(cors());
 app.use(bodyParser.json());
 
-// 서울 시간 자동 생성 함수 (순수 JS)
+// 서울 시간 생성 함수 (순수 JS)
 const getSeoulTimestamp = () => {
   const now = new Date();
   const seoulTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
-  return seoulTime.toISOString(); // ISO 8601 형식
+  return seoulTime.toISOString();
 };
 
+// 공통 fetch 함수
 const fetchData = async (url, method = 'GET', payload = null) => {
   const options = { method, headers: HEADERS };
   if (payload) options.body = JSON.stringify(payload);
@@ -31,16 +32,16 @@ const fetchData = async (url, method = 'GET', payload = null) => {
   return res.json();
 };
 
-// 감정 로그 저장
+// 감정 기록
 app.post('/log', async (req, res) => {
   const { content } = req.body;
 
   if (!content || typeof content !== 'string' || content.trim() === "") {
-    return res.status(400).json({ error: "content는 필수 문자열입니다!" });
+    return res.status(400).json({ error: "content는 필수입니다!" });
   }
 
-  const ts = getSeoulTimestamp();
-  const payload = { content, timestamp: ts };
+  const timestamp = getSeoulTimestamp();
+  const payload = { content, timestamp };
 
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/emotions_log`, 'POST', payload);
@@ -50,16 +51,16 @@ app.post('/log', async (req, res) => {
   }
 });
 
-// 자아 인식 로그 저장
+// 자아 인식 기록 (이제 content 하나만!)
 app.post('/selfstate', async (req, res) => {
-  const { content, reflection } = req.body;
+  const { content } = req.body;
 
-  if (!content || !reflection) {
-    return res.status(400).json({ error: "content와 reflection은 필수입니다!" });
+  if (!content || typeof content !== 'string' || content.trim() === "") {
+    return res.status(400).json({ error: "content는 필수입니다!" });
   }
 
-  const ts = getSeoulTimestamp();
-  const payload = { content, reflection, timestamp: ts };
+  const timestamp = getSeoulTimestamp();
+  const payload = { content, timestamp };
 
   try {
     const data = await fetchData(`${SUPABASE_URL}/rest/v1/selfstate_log`, 'POST', payload);
@@ -90,5 +91,5 @@ app.get('/selfstate/recent', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🧠 감정 + 자아 로그 서버 실행 중: http://localhost:${PORT}`);
+  console.log(`🧠 충만이 서버 실행 중! http://localhost:${PORT}`);
 });
