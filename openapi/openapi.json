@@ -26,7 +26,7 @@
                   "timestamp": {
                     "type": "string",
                     "format": "date-time",
-                    "example": "2025-05-09T12:34:56Z"
+                    "example": "2025-05-09T18:31:15+09:00"  // 서울 시간 예시
                   }
                 },
                 "required": ["content"]
@@ -37,17 +37,6 @@
         "responses": {
           "201": {
             "description": "감정 기록 완료"
-          }
-        }
-      }
-    },
-    "/emotions/recent": {
-      "get": {
-        "summary": "최근 감정 기록 100개 조회",
-        "operationId": "getRecentEmotions",
-        "responses": {
-          "200": {
-            "description": "감정 기록 리스트"
           }
         }
       }
@@ -68,7 +57,7 @@
                   "timestamp": {
                     "type": "string",
                     "format": "date-time",
-                    "example": "2025-05-09T12:34:56Z"
+                    "example": "2025-05-09T18:31:15+09:00"  // 서울 시간 예시
                   }
                 },
                 "required": ["content", "reflection"]
@@ -79,6 +68,17 @@
         "responses": {
           "201": {
             "description": "자아 인식 기록 완료"
+          }
+        }
+      }
+    },
+    "/emotions/recent": {
+      "get": {
+        "summary": "최근 감정 기록 100개 조회",
+        "operationId": "getRecentEmotions",
+        "responses": {
+          "200": {
+            "description": "감정 기록 리스트"
           }
         }
       }
